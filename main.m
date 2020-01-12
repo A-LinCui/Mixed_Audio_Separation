@@ -15,8 +15,9 @@ plot(original);
 title('Original Signal Time Domain Waveform');
 xlabel('Time');
 ylabel('Amplitude');
+grid on;
 
-% Draw the original signal time frequency waveform
+% Draw the original signal Frequency Domain waveform
 fft_original = fft(original, 4096); % fast fourier transform
 abs_fft_original = abs(fft_original); % calculate the amplitude of fft_original wav
 figure (2);
@@ -24,6 +25,7 @@ plot(f, abs_fft_original (1:2048));
 title('Original Signal Frequency Domain Waveform');
 xlabel('Frequency/Hz');
 ylabel('Amplitude');
+grid on;
 
 % 45kHz band pass filter
 c_45 = [0.0005,0,-0.0014,0,0.0014,0,-0.0005];
@@ -75,6 +77,26 @@ output_first_song = filter(c_45,d_45,original);
 % 65kHz signal through the buttord filter
 output_second_song = filter(b_65, a_65,original);
 
+% Draw the 45kHz Signal after Bandpass Filter Frequency Domain waveform
+fft_output_first_song = fft(output_first_song, 4096); % fast fourier transform
+abs_fft_output_first_song = abs(fft_output_first_song); 
+figure (7);
+plot(f, abs_fft_output_first_song (1:2048));
+title('45kHz Signal after Bandpass Filter Frequency Domain Waveform');
+xlabel('Frequency/Hz');
+ylabel('Amplitude');
+grid on;
+
+% Draw the 65kHz Signal after Bandpass Filter Frequency Domain waveform
+fft_output_second_song = fft(output_second_song, 4096); % fast fourier transform
+abs_fft_output_second_song = abs(fft_output_second_song); 
+figure (8);
+plot(f, abs_fft_output_second_song (1:2048));
+title('65kHz Signal after Bandpass Filter Frequency Domain Waveform');
+xlabel('Frequency/Hz');
+ylabel('Amplitude');
+grid on;
+
 % Demodulation of the 45kHz signal
 n=0:length-1;
 cos_signal = cos(n * 2 * pi * 45000 / fs);
@@ -87,22 +109,22 @@ cos_signal = cos(n * 2 * pi * 65000 / fs);
 middle_original_65 = output_second_song .* cos_signal';
 middle_original_65 = middle_original_65 - mean(middle_original_65);
 
-% Draw the 45kHz signal time after Bandpass Filter Frequency Waveform
+% Draw the 45kHz signal time after Demodulation Step One Frequency Waveform
 fft_middle_45 = fft (middle_original_45, 4096); % fast fourier transform
 abs_fft_middle_45 = abs(fft_middle_45);
-figure(7);
+figure(9);
 plot (f, abs_fft_middle_45 (1:2048));
-title ('45kHz Signal after Bandpass Filter Frequency Domain Waveform');
+title ('45kHz Signal after Demodulation Step One Frequency Domain Waveform');
 xlabel ('Frequency/Hz');
 ylabel ('Amplitude');
 grid on;
 
-% Draw the 65kHz signal time after Bandpass Filter Frequency Waveform
+% Draw the 65kHz signal time after Demodulation Step One Frequency Waveform
 fft_middle_65 = fft (middle_original_65, 4096); % fast fourier transform
 abs_fft_middle_65 = abs(fft_middle_65);
-figure(8);
+figure(10);
 plot (f, abs_fft_middle_65 (1:2048));
-title ('65kHz Signal after Bandpass Filter Frequency Domain Waveform');
+title ('65kHz Signal after Demodulation Step One Frequency Domain Waveform');
 xlabel ('Frequency/Hz');
 ylabel ('Amplitude');
 grid on;
@@ -118,7 +140,7 @@ a_65 = [1.0000, -3.512958673247569, 4.653998866041075, -2.753805161156560, 6.137
 [H_65, F_65] = freqz(b_65,a_65,1000,fs);
 
 % Draw The Amplitude Response of The 45kHz Lowpass Filter
-figure(9);
+figure(11);
 plot(F_45, 20*log10(abs(H_45)));
 xlabel('Frequency/Hz');
 ylabel('Amplitude/dB');
@@ -126,7 +148,7 @@ title('45kHz Lowpass Filter Amplitude Response');
 grid on;
 
 % Draw The Phase Response of The 45kHz Lowpass Filter
-figure(10);
+figure(12);
 pha = angle(H_45) * 180 / pi;
 plot(F_45, pha);
 xlabel('Frequency/Hz');
@@ -135,7 +157,7 @@ title('45kHz Lowpass Filter Phase Response');
 grid on;
 
 % Draw The Amplitude Response of The 65kHz Lowpass Filter
-figure(11);
+figure(13);
 plot(F_65, 20*log10(abs(H_65)));
 xlabel('Frequency/Hz');
 ylabel('Amplitude/dB');
@@ -143,7 +165,7 @@ title('65kHz Lowpass Filter Amplitude Response');
 grid on;
 
 % Draw The Phase Response of The 65kHz Lowpass Filter
-figure(12);
+figure(14);
 pha = angle(H_65) * 180 / pi;
 plot(F_65, pha);
 xlabel('Frequency/Hz');
@@ -164,16 +186,17 @@ audiowrite('45kHz_song.wav',output_song_45,fs);
 audiowrite('65kHz_song.wav',output_song_65,fs);
 
 % Draw The 45kHz Output Song Time Domain Waveform
-figure(13);
+figure(15);
 plot(output_song_45);
 title ('Output 45kHz Song Time Domain Waveform');
 xlabel ('Time');
 ylabel ('Amplitude');
+grid on;
 
 % Draw the 45kHz Output Song Frequency Domain Waveform
 fft_output_45 = fft (output_song_45, 4096); % fast fourier transform
 abs_fft_output_45 = abs(fft_output_45); % calculate the amplitude of fft_original wav
-figure (14);
+figure (16);
 plot (f, abs_fft_output_45 (1:2048));
 title ('Output 45kHz Song Frequency Domain Waveform');
 xlabel ('Frequency/Hz');
@@ -181,16 +204,17 @@ ylabel ('Amplitude');
 grid on;
 
 % Draw The 65kHz Output Song Time Domain Waveform
-figure(15);
+figure(17);
 plot(output_song_65);
 title ('Output 65kHz Song Time Domain Waveform');
 xlabel ('Time');
 ylabel ('Amplitude');
+grid on;
 
 % Draw the 65kHz Output Song Frequency Domain Waveform
 fft_output_65 = fft (output_song_65, 4096); % fast fourier transform
 abs_fft_output_65 = abs(fft_output_65); % calculate the amplitude of fft_original wav
-figure (16);
+figure (18);
 plot (f, abs_fft_output_65 (1:2048));
 title ('Output 65kHz Song Frequency Domain Waveform');
 xlabel ('Frequency/Hz');
